@@ -3,9 +3,9 @@ const fs = require('fs');
 const axios = require('axios');
 let destinationPDF =  "./output/completed.pdf";
 const GTC = ["Gewesen Transportation Corp.", "B03278", "Maximinio De Jesus", "./pdf/GTC-MD.pdf"]
-const ASC = ["Amerikanisch Services Corp.", "B03279", "Sarah De Jesus", "./pdf/BLANK-NOSIG.pdf"]
+const ASC = ["Amerikanisch Services Corp.", "B03279", "Julio De Jesus", "./pdf/ASC-JD.pdf"]
 const STC = ["Starostka Transportation Corp", "-", "Ingrid Baez", "./pdf/BLANK-NOSIG.pdf"]
-const HEC = ["Heisenberg-Esser Corp", "-", "Maximo Polanco", "./pdf/BLANK-NOSIG.pdf"]
+const HEC = ["Heisenberg-Esser Corp", "B03289", "Maximo Polanco", "./pdf/BLANK-NOSIG.pdf"]
 
 
 let data = {
@@ -68,22 +68,22 @@ let vehiclesList = [
 ['T709400C', ASC],
 ['T709398C', GTC],
 ['T709397C', HEC],
-['T709394C', STC],
-['T719685C', HEC],
-['T719716C', HEC],
+['T709394C', HEC],
+['T719685C', ASC],
+['T719716C', ASC],
 ['T719725C', HEC],
 ['T719912C', HEC],
-['T724613C', STC],
+['T724613C', HEC],
 ['T724611C', ASC],
-['T719826C', STC],
-['T752450C', STC],
-['T755361C', STC],
+['T719826C', HEC],
+['T752450C', HEC],
+['T755361C', HEC],
 ['T732096C', ASC],
 ['T743993C', GTC],
 ['T744004C', HEC],
 ['T752794C', ASC],
-['T768394C', ASC]
-['T794981C', GTC]
+['T768394C', ASC],
+['T794981C', ASC]
 ];
 for(let i = 0; i <= vehiclesList.length; i++){
 
@@ -125,16 +125,16 @@ for(let i = 0; i <= vehiclesList.length; i++){
             // In case of a error throw err.
           if (err) throw err;
           })
-          i = vehiclesList.length;
+          // i = vehiclesList.length;
         }
-        else {
+        else if (hrf[0] !== undefined){
           data['VEHICLE ID_2'] = hrf[0].vehicle_vin_number;
           data.YEAR_2 = hrf[0].vehicle_year;
           data['with the vehicle identification number'] = hrf[0].vehicle_vin_number;
           data['BASE  AUTHORITY NAME_2'] = hrf[0].base_name;
           data['BASE LICENSE_2'] = hrf[0].base_number;
       }
-        console.dir(`Done with that ${hrf[0].base_number}`)
+        console.log(`Done with that ${hrf[0].base_number}`)
         getVinDetails(hrf[0].vehicle_vin_number)
           .then(nhtsaLookup => {
             data.MAKE_2 = nhtsaLookup.data.Results[6].Value;
@@ -159,7 +159,7 @@ for(let i = 0; i <= vehiclesList.length; i++){
 
 
                 pdfFiller.fillForm( vehiclesList[i][1][3], `./output/${vehiclesList[i][0]}.pdf`, data, function(err) {
-                    console.log("In callback (we're done).");
+                    console.log(`Filled ${vehiclesList[i][0]}!`);
                 });
               })
 
